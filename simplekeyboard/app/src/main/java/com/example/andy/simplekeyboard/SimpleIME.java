@@ -47,13 +47,17 @@ public class SimpleIME extends InputMethodService
                 if(encrypt){
                     int test;
                     test = (int)code;
-                    test = test + 1;
-                    code = (char)test;
+                    code = myencrypt(test);
                 }
                 ic.commitText(String.valueOf(code),1);
         }
     }
-
+    public char myencrypt(int input) {
+        char returnchar;
+        input = input + 2;
+        returnchar = (char)input;
+        return returnchar;
+    }
     @Override
     public void onPress(int primaryCode) {
     }
