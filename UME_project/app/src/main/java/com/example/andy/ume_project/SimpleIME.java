@@ -1,5 +1,4 @@
-package com.example.andy.simplekeyboard;
-
+package com.example.andy.ume_project;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
