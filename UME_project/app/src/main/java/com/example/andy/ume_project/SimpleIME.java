@@ -1,11 +1,9 @@
 package com.example.andy.ume_project;
-import android.app.Activity;
-import android.content.Intent;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
-import android.os.Bundle;
+import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
@@ -30,8 +28,11 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
         char buffer2[] = new char[1024];
         FileReader fr1;
         FileReader fr2;
+        File path = Environment.getExternalStorageDirectory();
+        File file1 = new File(path, "key");
+        File file2 = new File(path, "time");
         try {
-            fr1 = new FileReader("time");
+            fr1 = new FileReader(file2);
             int len1 = fr1.read(buffer1);
             String stime = new String(buffer1,0,len1);
             temptimes = Integer.parseInt(stime);
@@ -40,7 +41,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
             ex.printStackTrace();
         }
         try {
-            fr2 = new FileReader("key");
+            fr2 = new FileReader(file1);
             int len2 = fr2.read(buffer2);
             tempkey = new String(buffer2,0,len2);
             fr2.close();
@@ -66,6 +67,13 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 break;
             case -8763:
                 encrypt = !encrypt;
+                try {
+                    receive();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mykey = tempkey;
+                index = 0;
                 break;
             default:
                 char code = (char)primaryCode;
@@ -73,16 +81,6 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                     code = Character.toUpperCase(code);
                 }
                 if(encrypt){
-                    try {
-                        receive();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if(temptimes == times + 1){
-                        times = temptimes;
-                        mykey = tempkey;
-                        index = 0;
-                    }
                     int test;
                     test = (int)code;
                     code = myencrypt(test);
