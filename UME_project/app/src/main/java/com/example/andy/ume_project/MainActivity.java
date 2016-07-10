@@ -15,7 +15,7 @@ import java.io.*;
 public class MainActivity extends AppCompatActivity {
     Button button1;
     EditText key;
-    int times = 0;
+    int checkindex = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         button1.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                times = times + 1;
+                checkindex = 1;
                 try {
                     toNext();
                 } catch (IOException e) {
@@ -40,14 +40,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void toNext() throws IOException {
-        String stringtimes = Integer.toString(times);
+        String stringindex = Integer.toString(checkindex);
         File path = Environment.getExternalStorageDirectory();
         File file1 = new File(path, "key");
-        File file2 = new File(path, "time");
+        File file2 = new File(path, "checkindex");
         FileWriter fw1 = new FileWriter(file1,false);
         FileWriter fw2 = new FileWriter(file2,false);
         fw1.write(key.getText().toString());
-        fw2.write(stringtimes);
+        fw2.write(stringindex);
         fw1.close();
         fw2.close();
     }

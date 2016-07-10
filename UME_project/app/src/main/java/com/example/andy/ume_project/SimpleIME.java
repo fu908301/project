@@ -15,7 +15,7 @@ import java.io.*;
 
 public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
     int times = 0;
-    int temptimes;
+    int tempindex;
     int index = 0;
     private KeyboardView kv;
     private Keyboard keyboard;
@@ -28,15 +28,20 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
         char buffer2[] = new char[1024];
         FileReader fr1;
         FileReader fr2;
+        FileWriter fw1;
         File path = Environment.getExternalStorageDirectory();
         File file1 = new File(path, "key");
-        File file2 = new File(path, "time");
+        File file2 = new File(path, "checkindex");
         try {
             fr1 = new FileReader(file2);
             int len1 = fr1.read(buffer1);
-            String stime = new String(buffer1,0,len1);
-            temptimes = Integer.parseInt(stime);
+            String sindex = new String(buffer1,0,len1);
+            tempindex = Integer.parseInt(sindex);
             fr1.close();
+            fw1 = new FileWriter(file2,false);
+            String stringindex = Integer.toString(0);
+            fw1.write(stringindex);
+            fw1.close();
         }catch (FileNotFoundException ex){
             ex.printStackTrace();
         }
@@ -73,7 +78,8 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                     e.printStackTrace();
                 }
                 mykey = tempkey;
-                index = 0;
+                if(tempindex == 1)
+                    index = 0;
                 break;
             default:
                 char code = (char)primaryCode;
