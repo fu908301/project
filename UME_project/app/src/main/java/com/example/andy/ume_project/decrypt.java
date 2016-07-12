@@ -21,6 +21,7 @@ public class decrypt extends AppCompatActivity{
     int int_my_content;
     int int_decryption;
     int temp;
+    String strdecryption;
     char decryption[] = new char[100];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,8 @@ public class decrypt extends AppCompatActivity{
                 keyindex = 0;
                 AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);
                 builder.setTitle("After decryption : ");
-                builder.setMessage(decryption.toString());
+                strdecryption = String.valueOf(decryption);
+                builder.setMessage(strdecryption);
                 builder.show();
             }
         });
