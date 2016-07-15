@@ -22,7 +22,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
     private boolean caps = false;
     private boolean encrypt = false;
     String tempkey;
-    String mykey = "aaa";
+    String mykey = "asdf";
     public void receive() throws IOException {
         char buffer1[] = new char[1024];
         char buffer2[] = new char[1024];
@@ -98,7 +98,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
     public char myencrypt(int input) {
         char returnchar;
         int intkey =(int)mykey.charAt(index);
-        input = (input +intkey) % 128;
+        input = (input +intkey) % 96 + 32;//96 = 128 - 32
         index++;
         if(index == mykey.length())
             index = 0;

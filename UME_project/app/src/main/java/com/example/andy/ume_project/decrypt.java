@@ -39,11 +39,14 @@ public class decrypt extends AppCompatActivity{
                 for(int i = 0;i < my_content.length();i = i + 1) {
                     int_my_content = (int)my_content.charAt(i);
                     int_my_key = (int)my_key.charAt(keyindex);
-                    temp = int_my_content - int_my_key;
+                    int_decryption = (int_my_content - 32) + 96 - int_my_key;
+                    if(int_decryption < 32)
+                        int_decryption  = int_decryption + 96;
+                    /*temp = int_my_content - int_my_key;
                     if(temp < 0)
                         int_decryption = 128 + temp;
                     else if(temp > 0)
-                        int_decryption = temp % 128;
+                        int_decryption = temp % 128;*/
                     decryption[i] = (char)int_decryption;
                     keyindex = keyindex + 1;
                     if(keyindex == my_key.length()) {
