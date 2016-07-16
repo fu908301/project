@@ -21,7 +21,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
     private Keyboard keyboard;
     private boolean caps = false;
     private boolean encrypt = false;
-    String tempkey;
+    String tempkey = "asdf";
     String mykey = "asdf";
     public void receive() throws IOException {
         char buffer1[] = new char[1024];

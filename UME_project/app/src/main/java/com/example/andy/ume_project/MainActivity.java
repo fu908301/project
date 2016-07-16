@@ -29,16 +29,24 @@ public class MainActivity extends AppCompatActivity {
         button1.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkindex = 1;
-                try {
-                    toNext();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if ("".equals(key.getText().toString().trim())) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Warning!");
+                    builder.setMessage("You have not type the key!!");
+                    builder.show();
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Your key is : ");
-                builder.setMessage(key.getText());
-                builder.show();
+                else{
+                    checkindex = 1;
+                    try {
+                        toNext();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Your key is : ");
+                    builder.setMessage(key.getText());
+                    builder.show();
+                }
             }
         });
         button2.setOnClickListener(new Button.OnClickListener() {

@@ -5,60 +5,85 @@ package com.example.andy.ume_project;
  */
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import java.io.*;
+
 public class decrypt extends AppCompatActivity{
     Button button3;
     Button button4;
+    Button button5;
     EditText content;
     EditText key;
     int keyindex = 0;
     int int_my_key;
     int int_my_content;
     int int_decryption;
-    int temp;
+    String temp_key = "abcd";
     String strdecryption;
     char decryption[] = new char[100];
+    public void get_key() throws IOException{
+        char buffer[] = new char [100];
+        FileReader fr;
+        File path = Environment.getExternalStorageDirectory();
+        File file = new File(path,"key");
+        try{
+            fr = new FileReader(file);
+            int len = fr.read(buffer);
+            temp_key = new String(buffer,0,len);
+            fr.close();
+        }catch (FileNotFoundException ex){
+            ex.printStackTrace();
+        }
+    }
+    public void my_decrypt(String my_content,String my_key){
+        for(int i = 0;i < my_content.length();i = i + 1) {
+            int_my_content = (int)my_content.charAt(i);
+            int_my_key = (int)my_key.charAt(keyindex);
+            int_decryption = (int_my_content - 32) + 96 - int_my_key;
+            if(int_decryption < 32)
+                int_decryption  = int_decryption + 96;
+            decryption[i] = (char)int_decryption;
+            keyindex = keyindex + 1;
+            if(keyindex == my_key.length()) {
+                keyindex = 0;
+            }
+        }
+        keyindex = 0;
+        AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);
+        builder.setTitle("After decryption : ");
+        strdecryption = String.valueOf(decryption);
+        builder.setMessage(strdecryption);
+        builder.show();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.decrypt);
         button3 = (Button)findViewById(R.id.button3);
         button4 = (Button)findViewById(R.id.button4);
+        button5 = (Button)findViewById(R.id.button5);
         content = (EditText)findViewById(R.id.editText2);
         key = (EditText)findViewById(R.id.editText3);
         button3.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String my_content = content.getText().toString();
-                String my_key = key.getText().toString();
-                for(int i = 0;i < my_content.length();i = i + 1) {
-                    int_my_content = (int)my_content.charAt(i);
-                    int_my_key = (int)my_key.charAt(keyindex);
-                    int_decryption = (int_my_content - 32) + 96 - int_my_key;
-                    if(int_decryption < 32)
-                        int_decryption  = int_decryption + 96;
-                    /*temp = int_my_content - int_my_key;
-                    if(temp < 0)
-                        int_decryption = 128 + temp;
-                    else if(temp > 0)
-                        int_decryption = temp % 128;*/
-                    decryption[i] = (char)int_decryption;
-                    keyindex = keyindex + 1;
-                    if(keyindex == my_key.length()) {
-                        keyindex = 0;
-                    }
+                if("".equals(content.getText().toString().trim()) || "".equals(key.getText().toString().trim())) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);
+                    builder.setTitle("Warning!");
+                    builder.setMessage("You have not type the content or key!!");
+                    builder.show();
                 }
-                keyindex = 0;
-                AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);
-                builder.setTitle("After decryption : ");
-                strdecryption = String.valueOf(decryption);
-                builder.setMessage(strdecryption);
-                builder.show();
+                else {
+                    String my_content = content.getText().toString();
+                    String my_key = key.getText().toString();
+                    my_decrypt(my_content, my_key);
+                }
             }
         });
         button4.setOnClickListener(new Button.OnClickListener() {
@@ -68,6 +93,28 @@ public class decrypt extends AppCompatActivity{
                 intent.setClass(decrypt.this,MainActivity.class);
                 startActivity(intent);
                 decrypt.this.finish();
+            }
+        });
+        button5.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    get_key();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if("".equals(content.getText().toString().trim())) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);
+                    builder.setTitle("Warning!");
+                    builder.setMessage("You have not type the content!!");
+                    builder.show();
+                }
+                else {
+                    String my_content = content.getText().toString();
+                    String my_key = temp_key;
+                    my_decrypt(my_content, my_key);
+                }
             }
         });
     }
