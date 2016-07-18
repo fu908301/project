@@ -1,12 +1,20 @@
 package com.example.andy.ume_project;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
 import android.os.Environment;
+import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethod;
+import android.view.inputmethod.InputMethodManager;
+
 import java.io.*;
 
 /**
@@ -14,11 +22,12 @@ import java.io.*;
  */
 
 public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
-    int times = 0;
     int tempindex;
     int index = 0;
     private KeyboardView kv;
+    private KeyboardView kv2;
     private Keyboard keyboard;
+    private Keyboard keyboard2;
     private boolean caps = false;
     private boolean encrypt = false;
     String tempkey = "asdf";
@@ -81,6 +90,11 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 if(tempindex == 1)
                     index = 0;
                 break;
+            case -87:
+                kv.setKeyboard(new Keyboard(this,R.xml.qwerty2));
+                break;
+            case -76:
+                kv.setKeyboard(new Keyboard(this,R.xml.qwerty));
             default:
                 char code = (char)primaryCode;
                 if(Character.isLetter(code) && caps){
@@ -134,7 +148,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
     }
     @Override
     public View onCreateInputView() {
-        kv = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
+        kv = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard, null);
         keyboard = new Keyboard(this, R.xml.qwerty);
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
