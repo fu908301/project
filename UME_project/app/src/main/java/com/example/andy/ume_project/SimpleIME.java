@@ -95,6 +95,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 break;
             case -76:
                 kv.setKeyboard(new Keyboard(this,R.xml.qwerty));
+                break;
             default:
                 char code = (char)primaryCode;
                 if(Character.isLetter(code) && caps){
