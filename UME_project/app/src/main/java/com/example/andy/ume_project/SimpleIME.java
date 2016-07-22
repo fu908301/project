@@ -1,20 +1,12 @@
 package com.example.andy.ume_project;
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
 import android.os.Environment;
-import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputConnection;
-import android.view.inputmethod.InputMethod;
-import android.view.inputmethod.InputMethodManager;
-
 import java.io.*;
 
 /**
@@ -25,14 +17,12 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
     int tempindex;
     int index = 0;
     private KeyboardView kv;
-    private KeyboardView kv2;
     private Keyboard keyboard;
-    private Keyboard keyboard2;
     private boolean caps = false;
     private boolean encrypt = false;
     String tempkey = "asdf";
     String mykey = "asdf";
-    public void receive() throws IOException {
+    public void receive() throws IOException {  //利用開檔去讀取加密的KEY
         char buffer1[] = new char[1024];
         char buffer2[] = new char[1024];
         FileReader fr1;
@@ -47,7 +37,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
             String sindex = new String(buffer1,0,len1);
             tempindex = Integer.parseInt(sindex);
             fr1.close();
-            fw1 = new FileWriter(file2,false);
+            fw1 = new FileWriter(file2,false);  //把checkindex抓出來之後  檔案裡面的checkindex放回0
             String stringindex = Integer.toString(0);
             fw1.write(stringindex);
             fw1.close();
@@ -79,7 +69,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
             case Keyboard.KEYCODE_DONE:
                 ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
                 break;
-            case -8763:
+            case -8763:     //按下CH鍵做的事情
                 encrypt = !encrypt;
                 try {
                     receive();
@@ -87,21 +77,21 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                     e.printStackTrace();
                 }
                 mykey = tempkey;
-                if(tempindex == 1)
+                if(tempindex == 1)      //如果有換過KEY的話 index歸零
                     index = 0;
                 break;
-            case -87:
+            case -87:       // 1/2的鍵值
                 kv.setKeyboard(new Keyboard(this,R.xml.qwerty2));
                 break;
-            case -76:
-                kv.setKeyboard(new Keyboard(this,R.xml.qwerty));
+            case -76:       // 2/2的鍵值
+                kv.setKeyboard(keyboard);
                 break;
             default:
                 char code = (char)primaryCode;
                 if(Character.isLetter(code) && caps){
                     code = Character.toUpperCase(code);
                 }
-                if(encrypt){
+                if(encrypt){    //如果有按下CH鍵 則做加密
                     int test;
                     test = (int)code;
                     code = myencrypt(test);

@@ -17,7 +17,6 @@ import java.io.*;
 public class decrypt extends AppCompatActivity{
     Button button3;
     Button button4;
-    Button button5;
     EditText content;
     EditText key;
     int keyindex = 0;
@@ -27,7 +26,7 @@ public class decrypt extends AppCompatActivity{
     String temp_key = "abcd";
     String strdecryption;
     char decryption[] = new char[100];
-    public void get_key() throws IOException{
+    public void get_key() throws IOException{       //從檔案把KEY抓出來
         char buffer[] = new char [100];
         FileReader fr;
         File path = Environment.getExternalStorageDirectory();
@@ -45,7 +44,7 @@ public class decrypt extends AppCompatActivity{
         for(int i = 0;i < my_content.length();i = i + 1) {
             int_my_content = (int)my_content.charAt(i);
             int_my_key = (int)my_key.charAt(keyindex);
-            int_decryption = (int_my_content - 32) + 96 - int_my_key;
+            int_decryption = (int_my_content - 32) + 96 - int_my_key;   //解密的公式
             if(int_decryption < 32)
                 int_decryption  = int_decryption + 96;
             decryption[i] = (char)int_decryption;
@@ -55,7 +54,7 @@ public class decrypt extends AppCompatActivity{
             }
         }
         keyindex = 0;
-        AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);    //跳出訊息表示明文
         builder.setTitle("After decryption : ");
         strdecryption = String.valueOf(decryption);
         builder.setMessage(strdecryption);
@@ -67,54 +66,43 @@ public class decrypt extends AppCompatActivity{
         setContentView(R.layout.decrypt);
         button3 = (Button)findViewById(R.id.button3);
         button4 = (Button)findViewById(R.id.button4);
-        button5 = (Button)findViewById(R.id.button5);
         content = (EditText)findViewById(R.id.editText2);
         key = (EditText)findViewById(R.id.editText3);
         button3.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if("".equals(content.getText().toString().trim()) || "".equals(key.getText().toString().trim())) {
+                    if("".equals(content.getText().toString().trim())) {    //如果密文輸入的欄位是空白的 則跳出錯誤訊息
                     AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);
                     builder.setTitle("Warning!");
                     builder.setMessage("You have not type the content or key!!");
                     builder.show();
                 }
                 else {
-                    String my_content = content.getText().toString();
-                    String my_key = key.getText().toString();
-                    my_decrypt(my_content, my_key);
+                    if("".equals(key.getText().toString().trim())) {    //如果KEY的輸入欄位是空白的  則用檔案抓KEY出來解密
+                        try {
+                            get_key();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        String my_content = content.getText().toString();
+                        String my_key = temp_key;
+                        my_decrypt(my_content, my_key);
+                    }
+                    else{       //反過來KEY的欄位有輸入東西則用輸入的KEY作解密
+                        String my_content = content.getText().toString();
+                        String my_key = key.getText().toString();
+                        my_decrypt(my_content,my_key);
+                    }
                 }
             }
         });
-        button4.setOnClickListener(new Button.OnClickListener() {
+        button4.setOnClickListener(new Button.OnClickListener() {   //跳到加密的頁面
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(decrypt.this,MainActivity.class);
                 startActivity(intent);
                 decrypt.this.finish();
-            }
-        });
-        button5.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    get_key();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                if("".equals(content.getText().toString().trim())) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);
-                    builder.setTitle("Warning!");
-                    builder.setMessage("You have not type the content!!");
-                    builder.show();
-                }
-                else {
-                    String my_content = content.getText().toString();
-                    String my_key = temp_key;
-                    my_decrypt(my_content, my_key);
-                }
             }
         });
     }

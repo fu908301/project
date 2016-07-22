@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     Button button1;
     Button button2;
     EditText key;
-    int checkindex = 0;
+    int checkindex = 0;     //checkindex判斷說是否有按下Confirm按鈕
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,27 +29,27 @@ public class MainActivity extends AppCompatActivity {
         button1.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ("".equals(key.getText().toString().trim())) {
+                if ("".equals(key.getText().toString().trim())) {       //當輸入行為空  跳出錯誤訊息
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("Warning!");
                     builder.setMessage("You have not type the key!!");
                     builder.show();
                 }
                 else{
-                    checkindex = 1;
+                    checkindex = 1;     //因為按了confirm 所以變成1
                     try {
                         toNext();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);   //跳出警示訊息表示有輸入
                     builder.setTitle("Your key is : ");
                     builder.setMessage(key.getText());
                     builder.show();
                 }
             }
         });
-        button2.setOnClickListener(new Button.OnClickListener() {
+        button2.setOnClickListener(new Button.OnClickListener() {       //跳到decrypt頁面
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    public void toNext() throws IOException {
+    public void toNext() throws IOException {       //把輸入的Key跟checkindex存入檔案
         String stringindex = Integer.toString(checkindex);
         File path = Environment.getExternalStorageDirectory();
         File file1 = new File(path, "key");

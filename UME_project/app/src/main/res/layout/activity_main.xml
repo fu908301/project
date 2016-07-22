@@ -15,9 +15,9 @@
         android:layout_height="wrap_content"
         android:text="comfirm"
         android:id="@+id/button"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="194dp" />
+        android:layout_marginTop="67dp"
+        android:layout_below="@+id/editText"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -25,8 +25,8 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/editText"
-        android:layout_marginBottom="66dp"
-        android:layout_above="@+id/button"
+        android:layout_marginTop="73dp"
+        android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -35,9 +35,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Type your Key"
         android:id="@+id/textView"
-        android:layout_above="@+id/editText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="59dp" />
+        android:layout_marginTop="103dp"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -45,8 +45,7 @@
         android:text="Click me go to decrypt"
         android:id="@+id/button2"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="67dp" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
