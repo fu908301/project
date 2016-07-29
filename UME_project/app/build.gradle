@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.example.andy.ume_project"
+        applicationId "com.UME.andy.ume_project"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1

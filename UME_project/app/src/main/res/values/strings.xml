@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UME_project</string>
-    <string name="ume_project">UME_Project</string>
+    <string name="app_name">加密輸入法</string>
+    <string name="ume_project">加密輸入法</string>
     <string name="subtype_en_US">English (US)</string>
 </resources>
