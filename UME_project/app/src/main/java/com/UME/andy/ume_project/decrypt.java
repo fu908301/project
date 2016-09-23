@@ -13,19 +13,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+
 
 public class decrypt extends AppCompatActivity{
+    Rabbit rabbit = new Rabbit();
     Button button3;
     Button button4;
     EditText content;
     EditText key;
-    int keyindex = 0;
-    int int_my_key;
-    int int_my_content;
-    int int_decryption;
     String temp_key = "abcd";
-    String strdecryption;
-    char decryption[] = new char[100];
+    String IV = "thisisfucking";
+    boolean trimPadding = true;
     public void get_key() throws IOException{       //從檔案把KEY抓出來
         char buffer[] = new char [100];
         FileReader fr;
@@ -40,26 +39,6 @@ public class decrypt extends AppCompatActivity{
             ex.printStackTrace();
         }
     }
-    public void my_decrypt(String my_content,String my_key){
-        for(int i = 0;i < my_content.length();i = i + 1) {
-            int_my_content = (int)my_content.charAt(i);
-            int_my_key = (int)my_key.charAt(keyindex);
-            int_decryption = (int_my_content - 32) + 96 - int_my_key;   //解密的公式
-            if(int_decryption < 32)
-                int_decryption  = int_decryption + 96;
-            decryption[i] = (char)int_decryption;
-            keyindex = keyindex + 1;
-            if(keyindex == my_key.length()) {
-                keyindex = 0;
-            }
-        }
-        keyindex = 0;
-        AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);    //跳出訊息表示明文
-        builder.setTitle("After decryption : ");
-        strdecryption = String.valueOf(decryption);
-        builder.setMessage(strdecryption);
-        builder.show();
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +47,7 @@ public class decrypt extends AppCompatActivity{
         button4 = (Button)findViewById(R.id.button4);
         content = (EditText)findViewById(R.id.editText2);
         key = (EditText)findViewById(R.id.editText3);
+
         button3.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,12 +66,22 @@ public class decrypt extends AppCompatActivity{
                         }
                         String my_content = content.getText().toString();
                         String my_key = temp_key;
-                        my_decrypt(my_content, my_key);
+                        byte[] encrypt_message = my_content.getBytes(StandardCharsets.ISO_8859_1);
+                        String decrypt_message = rabbit.decryptMessage(encrypt_message,my_key,IV,trimPadding);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);    //跳出訊息表示明文
+                        builder.setTitle("After decryption : ");
+                        builder.setMessage(decrypt_message);
+                        builder.show();
                     }
                     else{       //反過來KEY的欄位有輸入東西則用輸入的KEY作解密
                         String my_content = content.getText().toString();
                         String my_key = key.getText().toString();
-                        my_decrypt(my_content,my_key);
+                        final byte[] encrypt_message = my_content.getBytes(StandardCharsets.ISO_8859_1);
+                        final String decrypt_message = rabbit.decryptMessage(encrypt_message,my_key,IV,trimPadding);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(decrypt.this);    //跳出訊息表示明文
+                        builder.setTitle("After decryption : ");
+                        builder.setMessage(decrypt_message);
+                        builder.show();
                     }
                 }
             }
