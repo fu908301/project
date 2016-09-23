@@ -1,5 +1,3 @@
-
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -401,7 +399,7 @@ class Rabbit {
 public class myRabbit2{
 	public static void main(String[] args){
 		Rabbit rabbit = new Rabbit();
-		String message = "toeiwutog";
+		String message = "I love you";
 		String key = "bkudhf";
 		String IV = "thisisfu";
 		boolean addPadding = false;
