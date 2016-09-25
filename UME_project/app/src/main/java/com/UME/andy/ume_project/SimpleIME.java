@@ -484,10 +484,16 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 kv.setKeyboard(keyboard);
                 break;
             case -8787:  //按下LK 把明文加密並且顯示出來
-                byte[] encrypt_string = rabbit.encryptMessage(temp_type,mykey,IV,addPadding);
-                String str = new String(encrypt_string,StandardCharsets.ISO_8859_1);
-                ic.commitText(str,1);
-                temp_type = "";
+                if(!encrypt){
+                    break;
+                }
+                else {
+                    byte[] encrypt_string = rabbit.encryptMessage(temp_type, mykey, IV, addPadding);
+                    String str = new String(encrypt_string, StandardCharsets.ISO_8859_1);
+                    ic.deleteSurroundingText(temp_type.length(), 0);
+                    ic.commitText(str, 1);
+                    temp_type = "";
+                }
                 break;
             default:
                 char code = (char)primaryCode;
@@ -496,6 +502,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 }
                 if(encrypt){    //如果有按下CH鍵 則做加密
                     temp_type = temp_type + String.valueOf(code);
+                    ic.commitText(String.valueOf(code), 1);
                 }
                 else if(!encrypt)
                     ic.commitText(String.valueOf(code), 1);
