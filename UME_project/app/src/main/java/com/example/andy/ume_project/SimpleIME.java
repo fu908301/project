@@ -7,8 +7,11 @@ import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
-import java.io.*;
 
+import com.UME.andy.ume_project.R;
+
+import java.io.*;
+import java.text.SimpleDateFormat;
 /**
  * Created by Andy on 2016/5/17.
  */
@@ -81,7 +84,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                     index = 0;
                 break;
             case -87:       // 1/2的鍵值
-                kv.setKeyboard(new Keyboard(this,R.xml.qwerty2));
+                kv.setKeyboard(new Keyboard(this, R.xml.qwerty2));
                 break;
             case -76:       // 2/2的鍵值
                 kv.setKeyboard(keyboard);

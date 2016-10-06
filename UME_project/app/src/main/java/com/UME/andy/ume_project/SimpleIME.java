@@ -10,6 +10,7 @@ import android.view.inputmethod.InputConnection;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 /**
@@ -485,14 +486,20 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 break;
             case -8787:  //按下LK 把明文加密並且顯示出來
                 if(!encrypt){
-                    break;
+                    SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    String date = sDateFormat.format(new java.util.Date());
+                    ic.commitText(date,1);
                 }
                 else {
-                    byte[] encrypt_string = rabbit.encryptMessage(temp_type, mykey, IV, addPadding);
-                    String str = new String(encrypt_string, StandardCharsets.ISO_8859_1);
-                    ic.deleteSurroundingText(temp_type.length(), 0);
-                    ic.commitText(str, 1);
-                    temp_type = "";
+                    if(temp_type == null || temp_type.isEmpty())
+                        break;
+                    else {
+                        byte[] encrypt_string = rabbit.encryptMessage(temp_type, mykey, IV, addPadding);
+                        String str = new String(encrypt_string, StandardCharsets.ISO_8859_1);
+                        ic.deleteSurroundingText(temp_type.length(), 0);
+                        ic.commitText(str, 1);
+                        temp_type = "";
+                    }
                 }
                 break;
             default:

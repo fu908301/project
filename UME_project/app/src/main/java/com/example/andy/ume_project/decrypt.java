@@ -3,7 +3,6 @@ package com.example.andy.ume_project;
 /**
  * Created by Andy on 2016/7/11.
  */
-
 import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import com.UME.andy.ume_project.R;
 import java.io.*;
 
 public class decrypt extends AppCompatActivity{
