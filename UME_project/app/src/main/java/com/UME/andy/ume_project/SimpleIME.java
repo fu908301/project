@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-
+import java.util.Random;
 /**
  * Created by Andy on 2016/5/17.
  */
@@ -121,8 +121,7 @@ class Rabbit {
      *
      * @param message
      *            message to be encrypted
-     * @param Charset
-     *            message charset
+     * @param
      * @param key
      *            key
      * @param iv
@@ -184,8 +183,8 @@ class Rabbit {
      *
      * @param encMessage
      *            message byte array to decrypt
-     * @param charset
-     *            charset of needed string decrypted equivalent
+     * @param
+     *
      * @param key
      *            key
      * @param iv
@@ -408,6 +407,8 @@ class Rabbit {
 public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
     int tempindex;
     int index = 0;
+    int G = 2;
+    int temp_random;
     private KeyboardView kv;
     private Keyboard keyboard;
     private boolean caps = false;
@@ -417,8 +418,8 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
     String temp_type = "";
     String IV = "thisisfuking";
     boolean addPadding = true;
-    boolean trimPadding = true;
     Rabbit rabbit = new Rabbit();
+    Random random = new Random();
     public void receive() throws IOException {  //利用開檔去讀取加密的KEY
         char buffer1[] = new char[1024];
         char buffer2[] = new char[1024];
@@ -486,9 +487,21 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 break;
             case -8787:  //按下LK 把明文加密並且顯示出來
                 if(!encrypt){
-                    SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                    String date = sDateFormat.format(new java.util.Date());
-                    ic.commitText(date,1);
+                    temp_random = random.nextInt(10);
+                    double keyinput = Math.pow(G,temp_random);
+                    String str = Double.toString(keyinput);
+                    String s_temp_random = Integer.toString(temp_random);
+                    ic.commitText(str,1);
+                    File path = Environment.getExternalStorageDirectory();
+                    File file1 = new File(path, "beforekey");//把產生的次方數用檔案存起來
+                    try {
+                        FileWriter fw1 = new FileWriter(file1, false);
+                        fw1.write(s_temp_random);
+                        fw1.close();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 else {
                     if(temp_type == null || temp_type.isEmpty())

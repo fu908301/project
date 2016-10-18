@@ -12,9 +12,6 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.UME.andy.ume_project.R;
-
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -60,8 +57,10 @@ public class MainActivity extends AppCompatActivity {
                     builder.show();
                 }
                 else{
+                    int len;
+                    char buffer[] = new char [100];
+                    String s_before_key = "";
                     checkindex = 1;     //因為按了confirm 所以變成1
-
                     try {
                         toNext();
                     } catch (IOException e) {
@@ -69,8 +68,23 @@ public class MainActivity extends AppCompatActivity {
                     }
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);   //跳出警示訊息表示有輸入
                     builder.setTitle("Your key is : ");
+                    try{
+                        FileReader fr;
+                        File path = Environment.getExternalStorageDirectory();
+                        File file = new File(path,"beforekey"); //利用開檔把存在本機的次方數讀取出來
+                        fr = new FileReader(file);
+                        len = fr.read(buffer);
+                        s_before_key = new  String(buffer,0,len);
+                        fr.close();
+                    }catch (IOException ex){
+                        ex.printStackTrace();
+                    }
+                    int before_key = Integer.parseInt(s_before_key);
                     String S1 = key.getText().toString();
-                    String S2 = toSHA1(S1.getBytes());
+                    double pow = Double.parseDouble(S1);
+                    double after_pow = Math.pow(pow,before_key);
+                    String s_after_pow = Double.toString(after_pow);
+                    String S2 = toSHA1(s_after_pow.getBytes());
                     System.out.println(S2);
                     builder.setMessage(S2);
                     builder.show();
