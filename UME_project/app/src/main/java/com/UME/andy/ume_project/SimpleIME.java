@@ -408,6 +408,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
     int tempindex;
     int index = 0;
     int G = 2;
+    int P = 93563;
     int temp_random;
     private KeyboardView kv;
     private Keyboard keyboard;
@@ -441,8 +442,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
             fw1.close();
         }catch (FileNotFoundException ex){
             ex.printStackTrace();
-        }
-        try {
+        }        try {
             fr2 = new FileReader(file1);
             int len2 = fr2.read(buffer2);
             tempkey = new String(buffer2,0,len2);
@@ -487,11 +487,11 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 break;
             case -8787:  //按下LK 把明文加密並且顯示出來
                 if(!encrypt){
-                    temp_random = random.nextInt(10);
+                    temp_random = random.nextInt(5) + 1;
                     double keyinput = Math.pow(G,temp_random);
                     String str = Double.toString(keyinput);
                     String s_temp_random = Integer.toString(temp_random);
-                    ic.commitText(str,1);
+                    ic.commitText(str,1);//這個要傳出去用
                     File path = Environment.getExternalStorageDirectory();
                     File file1 = new File(path, "beforekey");//把產生的次方數用檔案存起來
                     try {
@@ -510,7 +510,8 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                         byte[] encrypt_string = rabbit.encryptMessage(temp_type, mykey, IV, addPadding);
                         String str = new String(encrypt_string, StandardCharsets.ISO_8859_1);
                         ic.deleteSurroundingText(temp_type.length(), 0);
-                        ic.commitText(str, 1);
+                        String str2 = getStringToHex(str);
+                        ic.commitText(str2, 1);
                         temp_type = "";
                     }
                 }
@@ -527,6 +528,31 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 else if(!encrypt)
                     ic.commitText(String.valueOf(code), 1);
         }
+    }
+    public String getStringToHex(String strValue) {
+        byte byteData[] = null;
+        int intHex = 0;
+        String strHex = "";
+        String strReturn = "";
+        try {
+            byteData = strValue.getBytes("ISO8859-1");
+            for (int intI=0;intI<byteData.length;intI++)
+            {
+                intHex = (int)byteData[intI];
+                if (intHex<0)
+                    intHex += 256;
+                if (intHex<16)
+                    strHex += "0" + Integer.toHexString(intHex).toUpperCase();
+                else
+                    strHex += Integer.toHexString(intHex).toUpperCase();
+            }
+            strReturn = strHex;
+
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return strReturn;
     }
 
     @Override

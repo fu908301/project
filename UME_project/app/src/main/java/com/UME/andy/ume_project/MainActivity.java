@@ -61,11 +61,6 @@ public class MainActivity extends AppCompatActivity {
                     char buffer[] = new char [100];
                     String s_before_key = "";
                     checkindex = 1;     //因為按了confirm 所以變成1
-                    try {
-                        toNext();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);   //跳出警示訊息表示有輸入
                     builder.setTitle("Your key is : ");
                     try{
@@ -85,9 +80,13 @@ public class MainActivity extends AppCompatActivity {
                     double after_pow = Math.pow(pow,before_key);
                     String s_after_pow = Double.toString(after_pow);
                     String S2 = toSHA1(s_after_pow.getBytes());
-                    System.out.println(S2);
                     builder.setMessage(S2);
                     builder.show();
+                    try {
+                        toNext(S2);
+                    }catch (IOException ex){
+                    ex.printStackTrace();
+                }
                 }
             }
         });
@@ -101,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    public void toNext() throws IOException {       //把輸入的Key跟checkindex存入檔案
+    public void toNext(String S2) throws IOException {       //把輸入的Key跟checkindex存入檔案
         String stringindex = Integer.toString(checkindex);
-        String hashkey =toSHA1(key.getText().toString().getBytes());
+        String hashkey = S2;
         File path = Environment.getExternalStorageDirectory();
         File file1 = new File(path, "key");
         File file2 = new File(path, "checkindex");

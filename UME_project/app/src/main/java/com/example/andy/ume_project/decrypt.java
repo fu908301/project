@@ -8,9 +8,12 @@ import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import com.UME.andy.ume_project.R;
 import java.io.*;
 
@@ -19,6 +22,7 @@ public class decrypt extends AppCompatActivity{
     Button button4;
     EditText content;
     EditText key;
+    TextView textView;
     int keyindex = 0;
     int int_my_key;
     int int_my_content;
@@ -60,6 +64,7 @@ public class decrypt extends AppCompatActivity{
         builder.setMessage(strdecryption);
         builder.show();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +72,7 @@ public class decrypt extends AppCompatActivity{
         button3 = (Button)findViewById(R.id.button3);
         button4 = (Button)findViewById(R.id.button4);
         content = (EditText)findViewById(R.id.editText2);
-        key = (EditText)findViewById(R.id.editText3);
+        textView = (TextView)findViewById(R.id.textView6);
         button3.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,4 +111,5 @@ public class decrypt extends AppCompatActivity{
             }
         });
     }
+
 }
