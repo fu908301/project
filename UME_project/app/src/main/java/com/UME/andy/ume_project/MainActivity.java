@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import java.io.*;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -76,9 +77,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                     int before_key = Integer.parseInt(s_before_key);
                     String S1 = key.getText().toString();
-                    double pow = Double.parseDouble(S1);
-                    double after_pow = Math.pow(pow,before_key);
-                    String s_after_pow = Double.toString(after_pow);
+                    BigInteger beforemod = new BigInteger(S1);
+                    BigInteger aftermod;
+                    BigInteger P = new BigInteger("203956878356401977405765866929034577280193993314348263094772646453283062722701277632936616063144088173312372882677123879538709400158306567338328279154499698366071906766440037074217117805690872792848149112022286332144876183376326512083574821647933992961249917319836219304274280243803104015000563790123");
+                    beforemod = beforemod.pow(before_key);
+                    aftermod = beforemod.remainder(P);
+                    String s_after_pow = aftermod.toString();
                     String S2 = toSHA1(s_after_pow.getBytes());
                     builder.setMessage(S2);
                     builder.show();

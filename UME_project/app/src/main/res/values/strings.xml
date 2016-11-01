@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">加密輸入法</string>
-    <string name="ume_project">加密輸入法</string>
-    <string name="subtype_en_US">English (US)</string>
+<string name="app_name">加密輸入法</string>
+<string name="ume_project">加密輸入法</string>
+<string name="subtype_en_US">English (US)</string>
 </resources>

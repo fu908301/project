@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -407,7 +408,7 @@ class Rabbit {
 public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
     int tempindex;
     int index = 0;
-    int G = 2;
+    String G = "2";
     int P = 93563;
     int temp_random;
     private KeyboardView kv;
@@ -487,9 +488,13 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 break;
             case -8787:  //按下LK 把明文加密並且顯示出來
                 if(!encrypt){
-                    temp_random = random.nextInt(5) + 1;
-                    double keyinput = Math.pow(G,temp_random);
-                    String str = Double.toString(keyinput);
+                    temp_random = random.nextInt(900) + 1;
+                    BigInteger beforemod = new BigInteger(G);
+                    BigInteger P = new BigInteger("203956878356401977405765866929034577280193993314348263094772646453283062722701277632936616063144088173312372882677123879538709400158306567338328279154499698366071906766440037074217117805690872792848149112022286332144876183376326512083574821647933992961249917319836219304274280243803104015000563790123");
+                    BigInteger aftermod = new BigInteger(G);
+                    beforemod = beforemod.pow(temp_random);
+                    aftermod = beforemod.remainder(P);
+                    String str = aftermod.toString();
                     String s_temp_random = Integer.toString(temp_random);
                     ic.commitText(str,1);//這個要傳出去用
                     File path = Environment.getExternalStorageDirectory();
