@@ -57,6 +57,6 @@
         <Key android:codes="32" android:keyLabel="SPACE" android:keyWidth="30%p" android:isRepeatable="true"/>
         <Key android:codes="-8787" android:keyLabel="LK" android:keyWidth="10%p" android:isRepeatable="true"/>
         <Key android:codes="46" android:keyLabel="." android:keyWidth="10%p" android:isRepeatable="true"/>
-        <Key android:codes="-4" android:keyLabel="DONE" android:keyWidth="20%p" android:keyEdgeFlags="right"/>
+        <Key android:codes="-878" android:keyLabel="DCRPT" android:keyWidth="20%p" android:keyEdgeFlags="right"/>
     </Row>
 </Keyboard>

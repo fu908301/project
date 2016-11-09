@@ -1,12 +1,17 @@
 package com.UME.andy.ume_project;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
 import android.os.Environment;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
+import android.widget.Toast;
+
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
@@ -415,13 +420,30 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
     private Keyboard keyboard;
     private boolean caps = false;
     private boolean encrypt = false;
+    private ClipboardManager myClipboard;
     String tempkey = "asdf";
     String mykey = "asdf";
     String temp_type = "";
     String IV = "thisisfuking";
+    String temp_key = "";
     boolean addPadding = true;
+    boolean trimPadding = true;
     Rabbit rabbit = new Rabbit();
     Random random = new Random();
+    public void get_key() throws IOException{       //從檔案把KEY抓出來
+        char buffer[] = new char [100];
+        FileReader fr;
+        File path = Environment.getExternalStorageDirectory();
+        File file = new File(path,"key");
+        try{
+            fr = new FileReader(file);
+            int len = fr.read(buffer);
+            temp_key = new String(buffer,0,len);
+            fr.close();
+        }catch (FileNotFoundException ex){
+            ex.printStackTrace();
+        }
+    }
     public void receive() throws IOException {  //利用開檔去讀取加密的KEY
         char buffer1[] = new char[1024];
         char buffer2[] = new char[1024];
@@ -454,6 +476,7 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
     }
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
+        myClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
         InputConnection ic = getCurrentInputConnection();
         playClick(primaryCode);
         switch(primaryCode){
@@ -465,9 +488,32 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
                 keyboard.setShifted(caps);
                 kv.invalidateAllKeys();
                 break;
-            case Keyboard.KEYCODE_DONE:
-                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
-                break;
+            case -878:
+                ClipData abc = myClipboard.getPrimaryClip();
+                if(abc == null) {  //如果剪貼簿是空的則跳出
+                    Toast toast = Toast.makeText(getApplicationContext(), "You haven't copied cipher!", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, -500);
+                    toast.show();
+                    break;
+                }
+                else {
+                    try {
+                        get_key();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ClipData.Item item = abc.getItemAt(0);
+                    CharSequence temp = item.getText();
+                    String text = temp.toString();
+                    String my_key = temp_key;
+                    String my_content2 = getHexToString(text);
+                    byte[] encrypt_message = my_content2.getBytes(StandardCharsets.ISO_8859_1);
+                    String decrypt_message = rabbit.decryptMessage(encrypt_message,my_key,IV,trimPadding);
+                    Toast toast = Toast.makeText(getApplicationContext(), decrypt_message, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, -500);
+                    toast.show();
+                    break;
+                }
             case -8763:     //按下CH鍵做的事情
                 encrypt = !encrypt;
                 temp_type = "";
@@ -559,7 +605,28 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
         }
         return strReturn;
     }
-
+    public String getHexToString(String strValue) {
+        int intCounts = strValue.length() / 2;
+        String strReturn = "";
+        String strHex = "";
+        int intHex = 0;
+        byte byteData[] = new byte[intCounts];
+        try {
+            for (int intI = 0; intI < intCounts; intI++) {
+                strHex = strValue.substring(0, 2);
+                strValue = strValue.substring(2);
+                intHex = Integer.parseInt(strHex, 16);
+                if (intHex > 128)
+                    intHex = intHex - 256;
+                byteData[intI] = (byte) intHex;
+            }
+            strReturn = new String(byteData,StandardCharsets.ISO_8859_1);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return strReturn;
+    }
     @Override
     public void onPress(int primaryCode) {
     }
