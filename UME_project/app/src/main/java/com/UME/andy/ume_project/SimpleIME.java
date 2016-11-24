@@ -482,6 +482,11 @@ public class SimpleIME extends InputMethodService implements KeyboardView.OnKeyb
         switch(primaryCode){
             case Keyboard.KEYCODE_DELETE :
                 ic.deleteSurroundingText(1, 0);
+                if(encrypt && temp_type != "") {
+                    StringBuffer stringBuffer = new StringBuffer(temp_type);
+                    stringBuffer.deleteCharAt(temp_type.length() - 1);
+                    temp_type = stringBuffer.toString();
+                }
                 break;
             case Keyboard.KEYCODE_SHIFT:
                 caps = !caps;
